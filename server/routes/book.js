@@ -8,5 +8,6 @@ router.get('/', (req, res) => {
 })
 router.post('/savebook', uploadMem.single('avatar'), sendUploadToGCS, controllerBook.saveBook)
 router.get('/list', controllerBook.list)
+router.delete('/hapus/:id', controllerBook.hapus)
 
 module.exports = router

@@ -67,7 +67,7 @@
                         <td> {{ book.penerbit }} </td>
                         <td> {{ book.penulis }} </td>
                         <td>
-                            <button>Delete</button>
+                            <button @click="hapus(book.userId, i)">Delete</button>
                         </td>
                     </tr>
                 </tbody>
@@ -125,6 +125,18 @@ export default {
         .catch((err) => {
           console.log('error =>', err)
         })
+    },
+    hapus (id, index) {
+      if (localStorage.getItem('id') != id) {
+        swal("Anda tidak dapat menghapus data ini, karna ini property milik orang lain!")
+      } else {
+        let payload = {
+          id: id,
+          index: index
+        }
+        this.$store.dispatch('deleteBook', payload)
+        console.log('hapus')
+      }
     }
   }
 }

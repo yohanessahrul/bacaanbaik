@@ -29,6 +29,7 @@ export default {
             button: 'Okey'
           })
           localStorage.setItem('token', data.token)
+          localStorage.setItem('id', data.id)
           console.log(data)
           if (localStorage.getItem('token')) {
             if (data.role === 'admin') {

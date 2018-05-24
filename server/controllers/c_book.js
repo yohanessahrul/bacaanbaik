@@ -39,5 +39,21 @@ module.exports = {
           msg: 'Data error tidak dapat buku'
         })
       })
+  },
+  hapus (req, res) {
+    Book.remove({
+      _id: req.params.id
+    })
+      .then((response) => {
+          console.log('data masuk ke kondisi hapus')
+        res.status(200).json({
+          msg: 'Data berhasil dihapus'
+        })
+      })
+      .catch((err) => {
+        res.status(500).json({
+          msg: 'Data error tidak bisa hapus'
+        })
+      })
   }
 }
