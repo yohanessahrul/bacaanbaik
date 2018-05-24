@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+var Schema = mongoose.Schema
 
 var schema = new mongoose.Schema({
     judul: String,

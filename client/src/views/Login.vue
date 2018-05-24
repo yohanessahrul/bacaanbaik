@@ -25,6 +25,9 @@ export default {
       })
         .then((response) => {
           let data = response.data
+          swal(`Welcome ${data.username}!, Login success !`, {
+            button: 'Okey'
+          })
           localStorage.setItem('token', data.token)
           console.log(data)
           if (localStorage.getItem('token')) {

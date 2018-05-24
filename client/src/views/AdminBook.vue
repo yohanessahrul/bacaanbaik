@@ -20,26 +20,25 @@
                     <form>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Judul</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Judul">
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Judul" v-model="judul">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Penerbit</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Penerbit">
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Penerbit" v-model="penerbit">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Penulis</label>
-                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Penulis">
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Penulis" v-model="penulis">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Upload Cover</label>
-    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                            <input type="file" class="form-control-file" id="exampleFormControlFile1" @change="takeFile">
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" @click="saveBook">Save changes</button>
                 </div>
                 </div>
             </div>
@@ -53,33 +52,23 @@
                     <th scope="col">Judul</th>
                     <th scope="col">Penerbit</th>
                     <th scope="col">Penulis</th>
+                    <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                    <th scope="row">1</th>
+                    <tr v-for="(book, i) in books" :key="i">
+                    <th scope="row"> {{ i + 1 }} </th>
                         <td>
                             <div class="image">
-                                <img style="max-height: 50px;" src="https://files.readanybook.com/786336/thumbs/152x264/a-higher-loyalty-truth-lies-and-leadership.jpg" alt="">
+                                <img style="max-height: 50px;" :src="book.image" alt="">
                             </div>
                         </td>
-                        <td>Beranak dalam kaleng</td>
-                        <td>Tokopedia</td>
-                        <td>@tahilalats</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        <td>tahilalats</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                        <td>tahilalats</td>
+                        <td> {{ book.judul }} </td>
+                        <td> {{ book.penerbit }} </td>
+                        <td> {{ book.penulis }} </td>
+                        <td>
+                            <button>Delete</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -88,15 +77,54 @@
 </template>
 
 <script>
+import axios from 'axios'
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
-      books: ''
+      judul: '',
+      penerbit: '',
+      penulis: '',
+      file: null,
+      formData: new FormData()
     }
+  },
+  computed: {
+    ...mapState([
+      'books'
+    ])
   },
   created () {
     if (!localStorage.getItem('token')) {
       this.$router.push('/login')
+    }
+    this.$store.dispatch('getAllBooks')
+  },
+  methods: {
+    takeFile (event) {
+      console.log('==> ', event)
+      this.file = event.target.files[0]
+    },
+    saveBook () {
+      this.formData.set('judul', this.judul)
+      this.formData.set('penerbit', this.penerbit)
+      this.formData.set('penulis', this.penulis)
+      this.formData.set('avatar', this.file)
+
+      axios({
+        method: 'post',
+        url: 'http://localhost:3000/books/savebook',
+        headers: { token: localStorage.getItem('token') },
+        data: this.formData
+      })
+        .then((response) => {
+          console.log('response==>', response)
+
+        })
+        .catch((err) => {
+          console.log('error =>', err)
+        })
     }
   }
 }
