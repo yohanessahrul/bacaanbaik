@@ -4,7 +4,8 @@ var schema = new mongoose.Schema({
     username: String,
     password: String,
     email: String,
-    fullname: String
+    fullname: String,
+    role: String
 }, {
     timestamps: true
 })

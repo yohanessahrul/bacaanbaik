@@ -8,6 +8,15 @@ var cors = require('cors')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+var mongoose = require('mongoose');
+mongoose.connect(`mongodb://joe:123@ds133920.mlab.com:33920/baccanbaik`);
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('Database Connected !!!')
+});
+
 var app = express();
 
 // view engine setup
